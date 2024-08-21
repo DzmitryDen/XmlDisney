@@ -1,6 +1,7 @@
 package com.hfad.xmldisney.util
 
 import com.hfad.xmldisney.R
+import com.hfad.xmldisney.database.entity.DisneyHeroDbEntity
 import com.hfad.xmldisney.models.DisneyHero
 import com.hfad.xmldisney.models.DisneyHeroList
 import com.hfad.xmldisney.models.Fields
@@ -20,7 +21,6 @@ fun ListDisneyHeroResponse.toDisneyHeroList(): List<DisneyHeroList> {
     }
     return list
 }
-
 
 fun DisneyHeroResponse.toDisneyHero(): DisneyHero {
     return this.data.run {
@@ -46,4 +46,26 @@ fun DisneyHeroResponse.toDisneyHero(): DisneyHero {
             fields = list
         )
     }
+}
+
+fun DisneyHeroDbEntity.toDisneyHeroList(): DisneyHeroList {
+    return DisneyHeroList(id, name, image)
+}
+
+fun List<DisneyHeroDbEntity>.toDisneyHeroList(): List<DisneyHeroList> {
+    return map { dbEntity ->
+        dbEntity.toDisneyHeroList()
+    }
+}
+
+fun DisneyHeroDbEntity.toDisneyHero(): DisneyHero {
+    return DisneyHero(
+        name = this.name,
+        image = this.image,
+        fields = null
+    )
+}
+
+fun DisneyHeroList.toDisneyHeroDbEntity(): DisneyHeroDbEntity {
+    return DisneyHeroDbEntity(id, name, imageUrl)
 }

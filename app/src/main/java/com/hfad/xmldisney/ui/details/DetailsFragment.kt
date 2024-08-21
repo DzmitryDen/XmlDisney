@@ -1,25 +1,24 @@
-package com.example.disney_characters.ui.details
+package com.hfad.xmldisney.ui.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hfad.xmldisney.databinding.FragmentDetailsBinding
-import com.hfad.xmldisney.ui.details.DetailsViewModel
 import com.hfad.xmldisney.ui.details.adapter.heroAdapter.DisneyHeroAdapter
 import com.hfad.xmldisney.util.loadUrl
 import dagger.hilt.android.AndroidEntryPoint
-
-private const val ID = "id"
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment() {
 
     private val viewModel: DetailsViewModel by viewModels()
+    private val arguments: DetailsFragmentArgs by navArgs()
     private var binding: FragmentDetailsBinding? = null
 
     override fun onCreateView(
@@ -46,20 +45,12 @@ class DetailsFragment : Fragment() {
                 }
             }
         }
-
-        arguments?.let {
-            viewModel.getCharacter(it.getInt(ID))
-        }
+        viewModel.isSavedHero(arguments.id)
         binding?.backBtn?.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            findNavController().popBackStack()
         }
-    }
-
-    companion object {
-        fun getInstance(id: Int): DetailsFragment {
-            return DetailsFragment().apply {
-                arguments = bundleOf(ID to id)
-            }
+        binding?.like?.setOnClickListener {
+            viewModel.likeHerro(arguments.id)
         }
     }
 }
