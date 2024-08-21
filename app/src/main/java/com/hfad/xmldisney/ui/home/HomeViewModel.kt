@@ -2,29 +2,48 @@ package com.hfad.xmldisney.ui.home
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.hfad.xmldisney.models.DisneyHeroList
-import com.hfad.xmldisney.repository.DisneyRepository
-import com.hfad.xmldisney.util.toDisneyHeroList
+import com.hfad.xmldisney.repository.HeroResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: DisneyRepository
+    private val useCase: LoadHeroListUseCase
 ) : ViewModel() {
 
     val disneyHeroes = MutableLiveData<List<DisneyHeroList>>()
+    var showError: ((throwable: Throwable) -> Unit)? = null
+    private val disposable = CompositeDisposable()
 
     fun loadListData() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val response = repository.getListCharacters()
-            if (response.isSuccessful) {
-                response.body()?.toDisneyHeroList().let {
-                    disneyHeroes.postValue(it)
+        disposable.add(
+            useCase.loadListHero()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+
+                .subscribe({ result ->
+                    handleResult(result)
+                }, { error ->
+                    handleResult(HeroResult.Error(error))
                 }
+                )
+        )
+    }
+
+    private fun handleResult(result: HeroResult) {
+        when (result) {
+            is HeroResult.Success<*> -> {
+                disneyHeroes.value = result.data as List<DisneyHeroList>
+
+            }
+
+            is HeroResult.Error -> {
+                result.throwable.let { showError?.invoke(it) }
+
             }
         }
     }
