@@ -6,9 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.disney_characters.ui.details.DetailsFragment
-import com.hfad.xmldisney.R
 import com.hfad.xmldisney.databinding.FragmentHomeBinding
 import com.hfad.xmldisney.models.DisneyHeroList
 import com.hfad.xmldisney.ui.home.adapter.DisneyAdapter
@@ -32,19 +31,32 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.disneyHeroes.observe(viewLifecycleOwner) { heroLists ->
-            if (heroLists.isNotEmpty()) loadHerroes(heroLists)
+            if (heroLists != null) {
+                loadHeroes(heroLists)
+            }else {
+                loadHeroes(arrayListOf())
+            }
         }
         viewModel.loadListData()
+
+        binding?.allHero?.setOnClickListener {
+            viewModel.showAll()
+        }
+
+        binding?.myHero?.setOnClickListener {
+            viewModel.showFavorite()
+        }
     }
 
-    private fun loadHerroes(items: List<DisneyHeroList>) {
+    private fun loadHeroes(items: List<DisneyHeroList>) {
         binding?.run {
             recycleView.layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = DisneyAdapter { id ->
-                parentFragmentManager.beginTransaction()
-                    .add(R.id.container, DetailsFragment.getInstance(id))
-                    .addToBackStack(null)
-                    .commit()
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToDetailsFragment(
+                        id
+                    )
+                )
             }.also {
                 recycleView.adapter = it
             }
