@@ -7,7 +7,6 @@ class DisneyRepository @Inject constructor(
     private val api: DisneyApi
 ) {
 
-    suspend fun getListCharacters() = api.getCharacters()
-
-    suspend fun getCharacterById(id: Int) = api.getCharacterById(id)
+    fun getListCharacters() = api.getCharacters()
+    fun getCharacterById(id: Int) = api.getCharacterById(id)
 }

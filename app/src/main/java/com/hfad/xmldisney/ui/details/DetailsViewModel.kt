@@ -1,30 +1,50 @@
 package com.hfad.xmldisney.ui.details
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.hfad.xmldisney.models.DisneyHero
-import com.hfad.xmldisney.repository.DisneyRepository
-import com.hfad.xmldisney.util.toDisneyHero
+import com.hfad.xmldisney.repository.HeroResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
-    private val repository: DisneyRepository
+    private val useCase: GetHeroByIdUseCase
 ) : ViewModel() {
 
-    val hero = MutableLiveData<DisneyHero?>(null)
+    val hero = PublishSubject.create<DisneyHero?>()
+    var showError: ((throwable: Throwable) -> Unit)? = null
+    private val disposable = CompositeDisposable()
+    override fun onCleared() {
+        super.onCleared()
+        disposable.clear()
+    }
 
     fun getCharacter(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val response = repository.getCharacterById(id)
-            if (response.isSuccessful) {
-                response.body()?.toDisneyHero().let {
-                    hero.postValue(it)
-                }
+        disposable.add(
+            useCase.loadCharacterById(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ result ->
+                    handleResult(result)
+                }, { error ->
+                    handleResult(HeroResult.Error(error))
+                })
+        )
+    }
+
+    private fun handleResult(result: HeroResult) {
+        when (result) {
+            is HeroResult.Success<*> -> {
+                hero.onNext(result.data as DisneyHero)
+            }
+
+            is HeroResult.Error -> {
+                result.throwable.let { showError?.invoke(it) }
+
             }
         }
     }
