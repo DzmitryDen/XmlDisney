@@ -1,25 +1,32 @@
 package com.hfad.xmldisney.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.disney_characters.ui.details.DetailsFragment
-import com.hfad.xmldisney.R
+import com.hfad.xmldisney.App
 import com.hfad.xmldisney.databinding.FragmentHomeBinding
 import com.hfad.xmldisney.models.DisneyHeroList
 import com.hfad.xmldisney.ui.home.adapter.DisneyAdapter
-import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private val viewModel: HomeViewModel by viewModels()
+    @Inject
+    lateinit var vmProvider: HomeVMProvider
+    private val viewModel: HomeViewModel by viewModels { vmProvider }
     private var binding: FragmentHomeBinding? = null
     private var adapter: DisneyAdapter? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        App.appComponent?.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,19 +39,32 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.disneyHeroes.observe(viewLifecycleOwner) { heroLists ->
-            if (heroLists.isNotEmpty()) loadHerroes(heroLists)
+            if (heroLists != null) {
+                loadHeroes(heroLists)
+            } else {
+                loadHeroes(arrayListOf())
+            }
         }
         viewModel.loadListData()
+
+        binding?.allHero?.setOnClickListener {
+            viewModel.showAll()
+        }
+
+        binding?.myHero?.setOnClickListener {
+            viewModel.showFavorite()
+        }
     }
 
-    private fun loadHerroes(items: List<DisneyHeroList>) {
+    private fun loadHeroes(items: List<DisneyHeroList>) {
         binding?.run {
             recycleView.layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = DisneyAdapter { id ->
-                parentFragmentManager.beginTransaction()
-                    .add(R.id.container, DetailsFragment.getInstance(id))
-                    .addToBackStack(null)
-                    .commit()
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToDetailsFragment(
+                        id
+                    )
+                )
             }.also {
                 recycleView.adapter = it
             }
