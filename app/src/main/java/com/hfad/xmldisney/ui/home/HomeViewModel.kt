@@ -16,6 +16,7 @@ class HomeViewModel(
 ) : ViewModel() {
 
     val disneyHeroes = MutableLiveData<List<DisneyHeroList>?>()
+    val error = MutableLiveData<String?>(null)
 
     fun loadListData() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -25,6 +26,7 @@ class HomeViewModel(
                     disneyHeroes.postValue(it)
                 }
             } else { //Не работает апи
+                error.postValue(response.message())
                 disneyHeroes.postValue(
                     arrayListOf(
                         DisneyHeroList(

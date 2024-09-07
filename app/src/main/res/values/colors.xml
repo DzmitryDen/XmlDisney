@@ -4,4 +4,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="violetL">#8E97FD</color>
     <color name="violet">#1F265E</color>
+    <color name="green">#994CAF50</color>
+    <color name="red">#99F44336</color>
+    <color name="yellow">#9AFFEB3B</color>
+    <color name="text_green">#4CAF50</color>
+    <color name="text_red">#F44336</color>
+    <color name="text_yellow">#FFEB3B</color>
 </resources>

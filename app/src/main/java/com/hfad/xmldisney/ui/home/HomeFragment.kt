@@ -1,15 +1,18 @@
 package com.hfad.xmldisney.ui.home
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.hfad.xmldisney.App
+import com.hfad.xmldisney.R
 import com.hfad.xmldisney.databinding.FragmentHomeBinding
 import com.hfad.xmldisney.models.DisneyHeroList
 import com.hfad.xmldisney.ui.home.adapter.DisneyAdapter
@@ -41,8 +44,22 @@ class HomeFragment : Fragment() {
         viewModel.disneyHeroes.observe(viewLifecycleOwner) { heroLists ->
             if (heroLists != null) {
                 loadHeroes(heroLists)
+                setBannerState(
+                    getDrawable(requireContext(), R.drawable.icon_success),
+                    "ok",
+                    requireContext().getColor(R.color.green)
+                )
             } else {
                 loadHeroes(arrayListOf())
+            }
+        }
+        viewModel.error.observe(viewLifecycleOwner) { message ->
+            if (message != null) {
+                setBannerState(
+                    getDrawable(requireContext(), R.drawable.icon_error),
+                    message,
+                    requireContext().getColor(R.color.red)
+                )
             }
         }
         viewModel.loadListData()
@@ -53,6 +70,10 @@ class HomeFragment : Fragment() {
 
         binding?.myHero?.setOnClickListener {
             viewModel.showFavorite()
+        }
+
+        binding?.banner?.close {
+            binding?.banner?.visibility = View.GONE
         }
     }
 
@@ -69,6 +90,15 @@ class HomeFragment : Fragment() {
                 recycleView.adapter = it
             }
             adapter?.submitList(items)
+        }
+    }
+
+    private fun setBannerState(icon: Drawable?, message: String, color: Int) {
+        binding?.banner?.run {
+            visibility = View.VISIBLE
+            setIcon(icon)
+            setMessage(message)
+            setBackground(color)
         }
     }
 }

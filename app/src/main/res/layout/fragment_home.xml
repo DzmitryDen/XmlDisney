@@ -65,4 +65,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/barrier" />
 
+    <com.hfad.xmldisney.ui.BannerView
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:closeIcon="@drawable/icon_close"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

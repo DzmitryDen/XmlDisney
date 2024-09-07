@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="BannerView">
+        <attr name="closeIcon" format="reference" />
+        <attr name="backgroundColor" format="color" />
+        <attr name="bannerIcon" format="reference" />
+        <attr name="bannerText" format="string" />
+    </declare-styleable>
+
+</resources>
