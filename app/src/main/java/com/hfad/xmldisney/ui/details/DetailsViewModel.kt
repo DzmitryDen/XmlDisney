@@ -5,16 +5,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hfad.xmldisney.models.DisneyHero
 import com.hfad.xmldisney.models.DisneyHeroList
-import com.hfad.xmldisney.repository.DbRepository
-import com.hfad.xmldisney.repository.DisneyRepository
+import com.hfad.xmldisney.repository.IntDbRepository
+import com.hfad.xmldisney.repository.IntDisneyRepository
 import com.hfad.xmldisney.util.toDisneyHero
 import com.hfad.xmldisney.util.toDisneyHeroDbEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DetailsViewModel(
-    private val repository: DisneyRepository,
-    private val dbRepository: DbRepository
+    private val repository: IntDisneyRepository,
+    private val dbRepository: IntDbRepository
 ) : ViewModel() {
 
     val hero = MutableLiveData<DisneyHero?>(null)

@@ -2,13 +2,13 @@ package com.hfad.xmldisney.ui.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.hfad.xmldisney.repository.DbRepository
-import com.hfad.xmldisney.repository.DisneyRepository
+import com.hfad.xmldisney.repository.IntDbRepository
+import com.hfad.xmldisney.repository.IntDisneyRepository
 import javax.inject.Inject
 
 class DetailsVMProvider @Inject constructor(
-    private val repository: DisneyRepository,
-    private val dbRepository: DbRepository
+    private val repository: IntDisneyRepository,
+    private val dbRepository: IntDbRepository
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
