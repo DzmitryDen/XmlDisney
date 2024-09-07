@@ -8,6 +8,53 @@
     android:background="@color/violet"
     tools:context=".ui.home.HomeFragment">
 
+    <ImageButton
+        android:id="@+id/all_hero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_40"
+        android:src="@drawable/group"
+        app:layout_constraintBottom_toTopOf="@+id/all"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_5"
+        android:text="All"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/all_hero"
+        app:layout_constraintStart_toStartOf="@+id/all_hero"
+        app:layout_constraintTop_toBottomOf="@+id/all_hero" />
+
+    <ImageButton
+        android:id="@+id/my_hero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/not_like"
+        app:layout_constraintStart_toEndOf="@+id/all_hero"
+        app:layout_constraintTop_toTopOf="@+id/all_hero" />
+
+    <TextView
+        android:id="@+id/my"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_5"
+        android:text="My"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/my_hero"
+        app:layout_constraintStart_toStartOf="@+id/my_hero"
+        app:layout_constraintTop_toBottomOf="@+id/my_hero" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_0"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="all, my" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_view"
         android:layout_width="@dimen/dp_0"
@@ -16,6 +63,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/barrier" />
+
+    <com.hfad.xmldisney.ui.BannerView
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:closeIcon="@drawable/icon_close"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
