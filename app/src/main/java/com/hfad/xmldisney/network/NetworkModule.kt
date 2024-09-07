@@ -2,8 +2,6 @@ package com.hfad.xmldisney.network
 
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -13,7 +11,6 @@ import javax.inject.Singleton
 private const val URL = "https://api.disneyapi.dev/"
 
 @Module
-@InstallIn(SingletonComponent::class)
 object RetrofitModule {
 
     @Provides

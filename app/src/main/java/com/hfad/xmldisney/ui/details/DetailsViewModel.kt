@@ -9,13 +9,10 @@ import com.hfad.xmldisney.repository.DbRepository
 import com.hfad.xmldisney.repository.DisneyRepository
 import com.hfad.xmldisney.util.toDisneyHero
 import com.hfad.xmldisney.util.toDisneyHeroDbEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class DetailsViewModel @Inject constructor(
+class DetailsViewModel(
     private val repository: DisneyRepository,
     private val dbRepository: DbRepository
 ) : ViewModel() {

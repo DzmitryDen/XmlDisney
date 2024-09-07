@@ -2,7 +2,6 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp") version "1.9.10-1.0.13"
-    id("com.google.dagger.hilt.android")
     id("androidx.navigation.safeargs")
 }
 
@@ -58,8 +57,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
-    implementation("com.google.dagger:hilt-android:2.49")
-    ksp("com.google.dagger:hilt-android-compiler:2.49")
+    implementation("com.google.dagger:dagger:2.52")
+    ksp("com.google.dagger:dagger-compiler:2.52")
     ksp("androidx.room:room-compiler:2.6.1")
 
     implementation("androidx.room:room-runtime:2.6.1")
